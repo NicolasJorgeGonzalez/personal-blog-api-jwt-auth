@@ -7,6 +7,7 @@ def publicationSchema(publication): # -> publication viene de la base de datos
     else:
         return {
             "id":str(publication["_id"]),
+            "userId":str(publication["userId"]),
             "title":publication["title"],
             "content":publication["content"],
             "category":publication["category"],

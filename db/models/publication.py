@@ -4,6 +4,7 @@ from typing import List
 
 class Publication(BaseModel):
     id:str
+    userId:str
     title:str
     content:str
     category:str
