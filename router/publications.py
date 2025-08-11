@@ -5,8 +5,8 @@ from bson import ObjectId
 
 from db.client import db
 from db.models.publication import Publication
-from db.schemas.publication import publication_schema
-from utils.publicationsUtils import srcId
+from db.schemas.publication import publicationSchema
+from utils.publicationsUtils import srcPublicationId
 
 router = APIRouter(
     prefix="/pb",
@@ -26,14 +26,14 @@ async def createPb(title:str = Form(...), content:str = Form(...), category:str 
         }
         
         insertedPb = db.publications.insert_one(pb).inserted_id
-        return Publication(**srcId(insertedPb))
+        return Publication(**srcPublicationId(insertedPb))
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"message":"error: cannot create de publication"})
 
 @router.get("/get/{id}", status_code=status.HTTP_200_OK)
 async def getPb(id:str):
     try:
-        publicationDb = srcId(ObjectId(id))
+        publicationDb = srcPublicationId(ObjectId(id))
         return Publication(**publicationDb)
     except HTTPException as exception:
         if exception.status_code == status.HTTP_404_NOT_FOUND:
@@ -78,7 +78,7 @@ async def getTermPb(term:str):
 @router.put("/update/{id}", status_code=status.HTTP_200_OK)
 async def updatePb(id:str, title:str  = Form(None), content:str  = Form(None), category:str  = Form(None), tags:Optional[List[str]]  = Form(None)):
     try:
-        publicationDb = srcId(ObjectId(id))
+        publicationDb = srcPublicationId(ObjectId(id))
         updatedPb = db.publications.find_one_and_replace(
             {"_id":ObjectId(id)},
             {
@@ -92,7 +92,7 @@ async def updatePb(id:str, title:str  = Form(None), content:str  = Form(None), c
             return_document=True
         )
         
-        return Publication(**publication_schema(updatedPb))
+        return Publication(**publicationSchema(updatedPb))
     
     except HTTPException as exception:
         if exception.status_code == status.HTTP_404_NOT_FOUND:
