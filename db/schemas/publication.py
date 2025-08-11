@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from datetime import date
 
-def publication_schema(publication): # -> publication viene de la base de datos
+def publicationSchema(publication): # -> publication viene de la base de datos
     if not publication:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail="Publication eq None")
     else:
